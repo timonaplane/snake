@@ -26,6 +26,8 @@ direction = 'r'
 
 def main():
 
+
+
     #Set up the main stuff
     pygame.init()
     surface = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -42,7 +44,11 @@ def main():
     #Check for events - key presses
     while True:
         pygame.time.Clock().tick(10)
-
+        #ensure snake stays in box
+        if(snake_head_x < (0) or snake_head_x >= (WIDTH) or snake_head_y < (0) or snake_head_y > (HEIGHT)):
+            print('snake x' + str(snake_head_x))
+            print('snake y' + str(snake_head_y))
+            return
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -71,11 +77,7 @@ def main():
             snake_head_x += SNAKE_SIZE
         snake_list.insert(0, Node(snake_head_x, snake_head_y))
 
-        #ensure snake stays in box
-        if(snake_head_x < (0 - SNAKE_SIZE * 2) or snake_head_x >= (WIDTH) or snake_head_y < (0 - SNAKE_SIZE * 2) or snake_head_y > (HEIGHT + SNAKE_SIZE)):
-            print('snake x' + str(snake_head_x))
-            print('snake y' + str(snake_head_y))
-            return
+
 
 
 
