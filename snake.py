@@ -26,8 +26,6 @@ direction = 'r'
 
 def main():
 
-
-
     #Set up the main stuff
     pygame.init()
     surface = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -40,12 +38,16 @@ def main():
     food_y = 0
     direction = 'r'
     place_food = True
+    player_score = 0
 
     #Check for events - key presses
     while True:
         pygame.time.Clock().tick(10)
+
+        if(snake_head_x == 600):
+            print("whyisthishappening")
         #ensure snake stays in box
-        if(snake_head_x < (0) or snake_head_x >= (WIDTH) or snake_head_y < (0) or snake_head_y > (HEIGHT)):
+        if(snake_head_x < (0) or snake_head_x >= (WIDTH) or snake_head_y < (0) or snake_head_y >= (HEIGHT)):
             print('snake x' + str(snake_head_x))
             print('snake y' + str(snake_head_y))
             return
@@ -78,16 +80,14 @@ def main():
         snake_list.insert(0, Node(snake_head_x, snake_head_y))
 
 
-
-
-
-
-
-
         #place a new food
         if(place_food == True):
             food_x = random.randint(0,(WIDTH-(FOOD_SIZE))/FOOD_SIZE) * FOOD_SIZE
             food_y = random.randint(0,(HEIGHT-(FOOD_SIZE))/FOOD_SIZE) * FOOD_SIZE
+            #make sure food isnt overlapping with the snake
+            while any(x.x == food_x and x.y == food_y for x in snake_list[1:len(snake_list)]) == True:
+                food_x = random.randint(0,(WIDTH-(FOOD_SIZE))/FOOD_SIZE) * FOOD_SIZE
+                food_y = random.randint(0,(HEIGHT-(FOOD_SIZE))/FOOD_SIZE) * FOOD_SIZE
             place_food = False
             print('foodx' + str(food_x))
             print('foody' + str(food_y))
@@ -100,16 +100,17 @@ def main():
             snake_list.append(Node(food_x,food_y))
             food_x = FOOD_SIZE * -1
             food_y = FOOD_SIZE * -1
+            player_score += 1
 
         #check if snake self eats
         if(any(x.x == snake_head_x and x.y == snake_head_y for x in snake_list[1:len(snake_list)])):
             return
 
-
-
-
         pygame.display.update()
         surface.fill(BLACK)
+
+        player_text = font.render('Score: ' + str(player_score), False, (0,255,65))
+        surface.blit(player_text, (HEIGHT/2 + 50,0))
 
         if(len(snake_list) > 1):
             for x in snake_list:
